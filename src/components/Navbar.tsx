@@ -13,7 +13,7 @@ const Navbar = () => {
           {/* Logo */}
           <a href="#home" className="flex items-center gap-2 text-xl font-bold">
             <Code className="w-8 h-8 text-primary" />
-            <span>Adarsh <span className="text-primary">Sharma</span></span>
+            <span>Adarsh</span>
           </a>
 
           {/* Desktop Navigation */}
