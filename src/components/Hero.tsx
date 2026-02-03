@@ -1,5 +1,5 @@
 import { Code, Send, Github, Linkedin, Instagram, Globe } from "lucide-react";
-import profileImage from "@/assets/profile.jpg";
+import profileImage from "@/assets/profile.png";
 
 const Hero = () => {
   const socialLinks = [
