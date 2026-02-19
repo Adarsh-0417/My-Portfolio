@@ -21,14 +21,13 @@ app.get("/", (req, res) => {
 app.post("/api/contact", async (req, res) => {
   try {
     const { name, email, message } = req.body;
-
-    const newMessage = new Message({
+      const newContact = new Contact({
       name,
       email,
-      message
+      message,
     });
 
-    await newMessage.save();
+    await newContact.save();
 
     res.status(200).json({
       success: true,
