@@ -1,16 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-
+const Contact = require("./models/Contact");
 
 require("dotenv").config();
 
 const app = express();
 const Message = require("./models/Message");
 
-app.use(cors({
-  origin: "*"
-}));
+app.use(cors());
 app.use(express.json());
 mongoose.connect(process.env.MONGO_URI, {
   useNewUrlParser: true,
@@ -23,7 +21,7 @@ app.get("/", (req, res) => {
   res.send("Backend is alive");
 });
 
-app.post("/api/contact", async (req, res) => {
+app.post("/api/Contact", async (req, res) => {
   try {
     const { name, email, message } = req.body;
       const newContact = new Contact({
