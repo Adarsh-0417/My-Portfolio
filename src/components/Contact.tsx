@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Send, Mail, MapPin, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+// FIX 1: Component name uppercase
 const Contact = () => {
 
   const { toast } = useToast();
@@ -22,53 +23,65 @@ const Contact = () => {
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setIsSubmitting(true);
 
-  try {
-    const response = await fetch(
-      "https://portfolio-backend-z98t.onrender.com/api/contact",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-        }),
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+
+      const response = await fetch(
+        "https://portfolio-backend-z98t.onrender.com/api/contact",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            message: formData.message,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+
+        toast({
+          title: "Success 🚀",
+          description: "Message sent successfully!",
+        });
+
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+
+      } else {
+
+        throw new Error(data.message || "Failed");
+
       }
-    );
 
-    const data = await response.json();
+    } catch (error) {
 
-    if (data.success) {
+      console.error("Contact form error:", error);
+
       toast({
-        title: "Success 🚀",
-        description: "Message sent successfully!",
+        title: "Error",
+        description: "Failed to send message. Try again later.",
+        variant: "destructive",
       });
 
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-    } else {
-      throw new Error("Failed");
     }
 
-  } catch (error) {
-    toast({
-      title: "Error",
-      description: "Failed to send message. Try again later.",
-      variant: "destructive",
-    });
-  }
+    setIsSubmitting(false);
 
-  setIsSubmitting(false);
-};
+  };
+
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -80,6 +93,7 @@ const Contact = () => {
     }));
 
   };
+
 
   return (
 

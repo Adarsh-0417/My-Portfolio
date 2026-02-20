@@ -1,30 +1,49 @@
 const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
-const Contact = require("./models/Contact");
 
 require("dotenv").config();
 
-const app = express();
-const Message = require("./models/Message");
+// import Contact model (Capital C)
+const Contact = require("./models/Contact");
 
+const app = express();
+
+// middleware
 app.use(cors());
 app.use(express.json());
-mongoose.connect(process.env.MONGO_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
-.then(() => console.log("MongoDB connected"))
-.catch(err => console.log(err));
 
+// MongoDB connection
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+  console.log("MongoDB connected successfully");
+})
+.catch((err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+// test route
 app.get("/", (req, res) => {
   res.send("Backend is alive");
 });
 
-app.post("/api/Contact", async (req, res) => {
+// contact route
+app.post("/api/contact", async (req, res) => {
+
   try {
+
     const { name, email, message } = req.body;
-      const newContact = new Contact({
+
+    // validation
+    if (!name || !email || !message) {
+      return res.status(400).json({
+        success: false,
+        message: "All fields required",
+      });
+    }
+
+    // create document
+    const newContact = new Contact({
       name,
       email,
       message,
@@ -34,18 +53,24 @@ app.post("/api/Contact", async (req, res) => {
 
     res.status(200).json({
       success: true,
-      message: "Message saved successfully"
+      message: "Message saved successfully",
     });
 
   } catch (error) {
-    console.error(error);
+
+    console.error("Contact save error:", error);
+
     res.status(500).json({
       success: false,
-      message: "Server error"
+      message: "Server error",
     });
+
   }
+
 });
 
+
+// port
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

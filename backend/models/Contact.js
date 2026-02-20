@@ -22,4 +22,5 @@ const ContactSchema = new mongoose.Schema({
   },
 });
 
+// IMPORTANT: Model name Capital, export same
 module.exports = mongoose.model("Contact", ContactSchema);
