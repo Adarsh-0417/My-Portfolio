@@ -22,66 +22,53 @@ const Contact = () => {
   ];
 
   const handleSubmit = async (e: React.FormEvent) => {
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    e.preventDefault();
-
-    setIsSubmitting(true);
-
-    try {
-
-      const response = await fetch(
-        "https://portfolio-backend-z98t.onrender.com/api/contact",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            subject: formData.subject,
-            message: formData.message,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      if (data.success) {
-
-        toast({
-          title: "Message sent 🚀",
-          description: "Your message has been received successfully.",
-        });
-
-        setFormData({
-          name: "",
-          email: "",
-          subject: "",
-          message: "",
-        });
-
-      } else {
-
-        throw new Error("Failed to send message");
-
+  try {
+    const response = await fetch(
+      "https://portfolio-backend-z98t.onrender.com/api/contact",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+        }),
       }
+    );
 
-    } catch (error) {
+    const data = await response.json();
 
-      console.error(error);
-
+    if (data.success) {
       toast({
-        title: "Error",
-        description: "Failed to send message. Try again later.",
-        variant: "destructive",
+        title: "Success 🚀",
+        description: "Message sent successfully!",
       });
 
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+    } else {
+      throw new Error("Failed");
     }
 
-    setIsSubmitting(false);
+  } catch (error) {
+    toast({
+      title: "Error",
+      description: "Failed to send message. Try again later.",
+      variant: "destructive",
+    });
+  }
 
-  };
+  setIsSubmitting(false);
+};
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
